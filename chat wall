@@ -1,0 +1,99 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>ChitChat Messenger</title>
+
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; font-family: sans-serif; }
+        body { background: #f0f2f5; height: 100dvh; display: flex; justify-content: center; align-items: center; overflow: hidden; }
+        .chat-app { width: 100%; max-width: 450px; height: 100dvh; background: #fff; display: flex; flex-direction: column; }
+
+        /* HEADER - GREEN */
+        .header { height: 60px; background: #00a884; display: flex; align-items: center; padding: 0 15px; color: white; flex-shrink: 0; }
+        .header-avatar { width: 38px; height: 38px; background: #fff; border-radius: 50%; display: flex; justify-content: center; align-items: center; margin-right: 12px; position: relative; }
+        .online-dot { width: 10px; height: 10px; background: #fff; border: 2px solid #00a884; border-radius: 50%; position: absolute; bottom: 0; right: 0; }
+        
+        /* BLINKING BLUE ONLINE TEXT */
+        .status-text { 
+            font-size: 11px; 
+            color: #00008b; 
+            font-weight: bold; 
+            animation: blink 2.5s infinite; 
+        }
+
+        @keyframes blink {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0; }
+        }
+
+        /* MESSAGES AREA */
+        .messages { flex: 1; overflow-y: auto; padding: 15px; background: #e5ddd5; display: flex; flex-direction: column; gap: 12px; }
+        .message { max-width: 85%; padding: 10px 14px; border-radius: 18px; color: #00008b; font-size: 15px; position: relative; font-weight: 500; }
+        .sent { background: #dcf8c6; margin-left: auto; border-bottom-right-radius: 5px; padding-bottom: 25px; align-self: flex-end; }
+        .received { background: #fff; margin-right: auto; border-bottom-left-radius: 5px; }
+
+        /* BLUE TICKS */
+        .ticks { position: absolute; bottom: 5px; right: 8px; display: flex; opacity: 0; transition: opacity 0.5s ease-in; }
+        .tick { width: 14px; height: 14px; fill: #00008b; margin-left: -5px; }
+
+        /* INPUT AREA - GREEN */
+        .input-area { display: flex; padding: 10px; background: #f0f0f0; border-top: 1px solid #ddd; align-items: center; gap: 10px; flex-shrink: 0; }
+        input { flex: 1; padding: 12px 15px; border: none; border-radius: 25px; background: #fff; color: #00008b; font-size: 16px; border: 1px solid #ccc; }
+        .send-btn { flex: 0 0 50px; height: 50px; border: none; background: #00a884; color: white; border-radius: 50%; cursor: pointer; font-size: 20px; }
+    </style>
+</head>
+
+<body>
+
+<div class="chat-app">
+    <div class="header">
+        <div class="header-avatar">
+            <svg viewBox="0 0 24 24" width="22" height="22" fill="#00a884"><path d="M12 12c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm0 2c-2.67 0-8 1.34-8 4v2h16v-2c0-2.66-5.33-4-8-4z"/></svg>
+            <div class="online-dot"></div>
+        </div>
+        <div>
+            <div style="font-weight:bold; color:white;">ChitChat</div>
+            <div class="status-text">online</div>
+        </div>
+    </div>
+
+    <div class="messages" id="messages">
+        <div class="message received">👋 Hello!</div>
+    </div>
+
+    <div class="input-area">
+        <input type="text" id="messageInput" placeholder="Message..." autocomplete="off">
+        <button class="send-btn" onclick="sendMessage()">➤</button>
+    </div>
+</div>
+
+<script>
+    function sendMessage() {
+        const input = document.getElementById("messageInput");
+        const text = input.value.trim();
+        if (text === "") return;
+
+        const messages = document.getElementById("messages");
+        const msg = document.createElement("div");
+        msg.className = "message sent";
+        
+        msg.innerHTML = `${text} 
+            <div class="ticks">
+                <svg class="tick" viewBox="0 0 24 24"><path d="M9 16.17L4.83 12l-1.42 1.41L9 19 21 7l-1.41-1.41z"/></svg>
+                <svg class="tick" viewBox="0 0 24 24"><path d="M9 16.17L4.83 12l-1.42 1.41L9 19 21 7l-1.41-1.41z"/></svg>
+            </div>`;
+        
+        messages.appendChild(msg);
+        input.value = "";
+        messages.scrollTop = messages.scrollHeight;
+
+        setTimeout(() => {
+            msg.querySelector('.ticks').style.opacity = "1";
+        }, 2500);
+    }
+</script>
+
+</body>
+</html>
